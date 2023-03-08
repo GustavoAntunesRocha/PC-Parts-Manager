@@ -1,6 +1,7 @@
 package br.com.antunes.gustavo.pcpartsproject.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -36,5 +37,15 @@ public class Computer {
 	private Date lastMaintenance;
 	
 	@OneToMany(mappedBy = "computer")
-	private Set<Component> components;
+	private Set<Component> components = new HashSet<>();
+	
+	public void addComponent(Component component) {
+		components.add(component);
+		component.setComputer(this);
+	}
+	
+	public void removeComponent(Component component) {
+		components.remove(component);
+		component.setComputer(null);
+	}
 }

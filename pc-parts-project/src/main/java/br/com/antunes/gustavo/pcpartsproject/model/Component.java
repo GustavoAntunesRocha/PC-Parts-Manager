@@ -2,6 +2,7 @@ package br.com.antunes.gustavo.pcpartsproject.model;
 
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,7 +36,7 @@ public class Component {
 	
 	private String serial;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "computer_component",
 			joinColumns = @JoinColumn(name = "component_id", referencedColumnName="id"),
 	        inverseJoinColumns = @JoinColumn(name = "computer_id", referencedColumnName="id")
