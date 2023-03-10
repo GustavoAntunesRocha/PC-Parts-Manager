@@ -29,7 +29,7 @@ public class CustomSecurityConfiguration {
 			.securityMatcher("/**")
 			.authorizeHttpRequests(registry -> registry
 					.requestMatchers("/").permitAll()
-					.requestMatchers("/auth/login").permitAll()
+					.requestMatchers("/users/**").permitAll()
 					.anyRequest().authenticated()
 			);
 		//http.securityMatcher(PathRequest.toH2Console());
