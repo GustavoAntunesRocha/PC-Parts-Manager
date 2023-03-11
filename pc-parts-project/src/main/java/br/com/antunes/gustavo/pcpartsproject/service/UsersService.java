@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,8 +24,10 @@ public class UsersService {
     private final UsersRepository userRepository;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public UsersDTO createUser(Users user) {
+    	user.setPassword(passwordEncoder.encode(user.getPassword()));
         Users savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UsersDTO.class);
     }
@@ -44,6 +47,14 @@ public class UsersService {
             throw new UserNotFoundException("User not found with email " + email);
         }
         return modelMapper.map(user, UsersDTO.class);
+    }
+    
+    public Users findUserByEmail(String email) throws UserNotFoundException {
+        Users user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found with email " + email);
+        }
+        return user;
     }
 
     public List<UsersDTO> getAllUsers() {

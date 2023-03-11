@@ -1,5 +1,8 @@
 package br.com.antunes.gustavo.pcpartsproject.model;
 
+import lombok.Builder;
+
+@Builder
 public class LoginResponse {
 
 	private String accesToken;
