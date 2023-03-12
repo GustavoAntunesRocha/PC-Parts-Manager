@@ -148,6 +148,23 @@ public class ComponentService {
 		return componentDTOList;
 	}
 	
+	public List<ComponentDTO> mapToDTOList(List<Component> components) {
+		List<ComponentDTO> componentDTOList = new ArrayList<>();
+		for (Component component : components) {
+			ComponentDTO componentDTO = new ComponentDTO();
+			componentDTO.setId(component.getId());
+			componentDTO.setName(component.getName());
+			componentDTO.setDescription(component.getDescription());
+			componentDTO.setFabricationDate(component.getFabricationDate());
+			componentDTO.setManufacturer(component.getManufacturer());
+			componentDTO.setSerial(component.getSerial());
+			componentDTO.setVersion(component.getVersion());
+			
+			componentDTOList.add(componentDTO);
+		}
+		return componentDTOList;
+	}
+	
 	public Component mapFromDTO(ComponentDTO dto) {
 		Component component = new Component();
 		component.setName(dto.getName());

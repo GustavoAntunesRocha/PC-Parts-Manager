@@ -42,11 +42,30 @@ public class ComponentController {
 		}
 		return ResponseEntity.ok(componentDTO);
 	}
+	
+	@GetMapping
+	public ResponseEntity<?> getAll() {
+		List<ComponentDTO> components;
+		try {
+			components = componentService.mapToDTOList(componentService.getAllComponents());
+		} catch (CustomException e) {
+			return handleCustomException(e);
+		}
+		return ResponseEntity.ok(components);
+	}
 
 	@PostMapping
 	public ResponseEntity<?> create(@Valid @RequestBody ComponentDTO componentDTO) {
 		ComponentDTO component = componentService.mapToDTO(componentService.create(componentDTO));
 		return ResponseEntity.ok(component);
+	}
+	
+	@PostMapping("/multiple")
+	public ResponseEntity<?> create(@Valid @RequestBody List<ComponentDTO> componentDTOs) {
+		for (ComponentDTO componentDTO : componentDTOs) {
+			componentService.create(componentDTO);			
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PutMapping
