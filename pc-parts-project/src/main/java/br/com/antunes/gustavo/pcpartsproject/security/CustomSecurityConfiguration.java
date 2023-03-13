@@ -39,6 +39,8 @@ public class CustomSecurityConfiguration {
 					.requestMatchers("/").permitAll()
 					.requestMatchers("/users/**").permitAll()
 					.requestMatchers("/auth/login").permitAll()
+					.requestMatchers("/swagger-ui/**").permitAll()
+					.requestMatchers("/v3/**").permitAll()
 					.anyRequest().authenticated()
 			);
 		return http.build();

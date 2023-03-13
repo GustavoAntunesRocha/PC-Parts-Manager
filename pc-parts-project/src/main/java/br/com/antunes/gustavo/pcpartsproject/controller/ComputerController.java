@@ -23,15 +23,30 @@ import br.com.antunes.gustavo.pcpartsproject.dto.ComputerDTO;
 import br.com.antunes.gustavo.pcpartsproject.exception.ApiErrorResponse;
 import br.com.antunes.gustavo.pcpartsproject.exception.CustomException;
 import br.com.antunes.gustavo.pcpartsproject.service.ComputerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/computer")
+@Tag(name = "Computer", description = "Operations related to computers")
 public class ComputerController {
 
 	@Autowired
 	private ComputerService computerService;
 
+	 @Operation(summary = "Get a computer by ID")
+	    @ApiResponses(value = {
+	            @ApiResponse(responseCode = "200", description = "Computer found",
+	                    content = @Content(mediaType = "application/json",
+	                            schema = @Schema(implementation = ComputerDTO.class))),
+	            @ApiResponse(responseCode = "404", description = "Computer not found",
+	                    content = @Content(mediaType = "application/json",
+	                            schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> getById(@PathVariable int id) {
 		ComputerDTO computerDTO;
@@ -43,12 +58,25 @@ public class ComputerController {
 		return ResponseEntity.ok(computerDTO);
 	}
 
+	@Operation(summary = "Creates a computer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Computer created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ComputerDTO.class)))})
 	@PostMapping
 	public ResponseEntity<?> create(@Valid @RequestBody ComputerDTO computerDTO) {
 		ComputerDTO computer = computerService.mapToDTO(computerService.create(computerDTO));
 		return ResponseEntity.ok(computer);
 	}
 
+	@Operation(summary = "Update a computer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Computer updated",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ComputerDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Computer not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@PutMapping
 	public ResponseEntity<?> update(@Valid @RequestBody ComputerDTO computerDTO) {
 		ComputerDTO computer;
@@ -61,6 +89,13 @@ public class ComputerController {
 		}
 	}
 	
+	@Operation(summary = "Delete a computer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Computer deleted",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Computer not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponse.class)))})
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable int id){
 		try {
@@ -96,4 +131,3 @@ public class ComputerController {
 	}
 
 }
-

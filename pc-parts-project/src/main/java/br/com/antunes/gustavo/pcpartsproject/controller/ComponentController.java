@@ -23,15 +23,25 @@ import br.com.antunes.gustavo.pcpartsproject.dto.ComponentDTO;
 import br.com.antunes.gustavo.pcpartsproject.exception.ApiErrorResponse;
 import br.com.antunes.gustavo.pcpartsproject.exception.CustomException;
 import br.com.antunes.gustavo.pcpartsproject.service.ComponentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/component")
+@Tag(name = "Component API", description = "Endpoints for managing components")
 public class ComponentController {
 
 	@Autowired
 	private ComponentService componentService;
 
+	@Operation(description = "Get a component object by ID", responses = {
+				@ApiResponse(responseCode = "200", description = "Successfully retrieved a component!", content = @Content(mediaType = "application/json")) })
+	@Parameter(name = "id", description = "ID of the component to retrieve", required = true, example = "1", in = ParameterIn.PATH)
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> getById(@PathVariable int id) {
 		ComponentDTO componentDTO;
@@ -43,6 +53,8 @@ public class ComponentController {
 		return ResponseEntity.ok(componentDTO);
 	}
 	
+	@Operation(description = "Get all components in the database", responses = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved all components!", content = @Content(mediaType = "application/json")) })
 	@GetMapping
 	public ResponseEntity<?> getAll() {
 		List<ComponentDTO> components;
@@ -54,12 +66,16 @@ public class ComponentController {
 		return ResponseEntity.ok(components);
 	}
 
+	@Operation(description = "Creates a component object", responses = {
+			@ApiResponse(responseCode = "201", description = "Successfully created a component!", content = @Content(mediaType = "application/json")) })
 	@PostMapping
 	public ResponseEntity<?> create(@Valid @RequestBody ComponentDTO componentDTO) {
 		ComponentDTO component = componentService.mapToDTO(componentService.create(componentDTO));
-		return ResponseEntity.ok(component);
+		return ResponseEntity.status(HttpStatus.CREATED).body(component);
 	}
 	
+	@Operation(description = "Creates multiple component objects", responses = {
+			@ApiResponse(responseCode = "201", description = "Successfully created all components!", content = @Content(mediaType = "application/json")) })
 	@PostMapping("/multiple")
 	public ResponseEntity<?> create(@Valid @RequestBody List<ComponentDTO> componentDTOs) {
 		for (ComponentDTO componentDTO : componentDTOs) {
@@ -67,7 +83,9 @@ public class ComponentController {
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
-
+	
+	@Operation(description = "Updates a component object", responses = {
+			@ApiResponse(responseCode = "200", description = "Successfully updated the component!", content = @Content(mediaType = "application/json")) })
 	@PutMapping
 	public ResponseEntity<?> update(@Valid @RequestBody ComponentDTO componentDTO) {
 		ComponentDTO component;
@@ -80,6 +98,8 @@ public class ComponentController {
 		}
 	}
 	
+	@Operation(description = "Deletes a component object", responses = {
+			@ApiResponse(responseCode = "200", description = "Successfully deleted the component!", content = @Content(mediaType = "application/json")) })
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable int id){
 		try {
